@@ -77,6 +77,10 @@ PRODUCT_PACKAGES += \
     audio.bluetooth.default \
     audio_policy.stub
 
+# Hands the call volume step to MediaTek's audio HAL, which does not follow the stream volume.
+PRODUCT_PACKAGES += \
+    MtkInCallService
+
 PRODUCT_PACKAGES += \
     libaecsw \
     libagc1sw \
