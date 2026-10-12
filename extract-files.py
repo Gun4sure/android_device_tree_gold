@@ -202,14 +202,18 @@ blob_fixups: blob_fixups_user_type = {
 
     ('vendor/bin/hw/android.hardware.media.c2-mediatek',
      'vendor/lib64/libcodec2_mtk_c2store.so',
-     'vendor/lib64/libcodec2_mtk_vdec.so',
-     'vendor/lib64/libcodec2_mtk_venc.so',
      'vendor/lib64/libcodec2_vpp_fa_plugin.so',
      'vendor/lib64/libcodec2_vpp_mi_plugin.so',
      'vendor/lib64/libcodec2_vpp_qt_plugin.so',
      'vendor/lib64/libcodec2_vpp_rs_plugin.so',
      'vendor/lib64/vpp_hdrmeta_handler_plugin.so',
      *(f'vendor/lib64/{lib}-v35.so' for lib in codec2_stock_libs)): codec2_fixup(),
+
+    # MediaTek's libformatter is installed as libformatter_mtk, because the platform now has
+    # a library called libformatter of its own.
+    ('vendor/lib64/libcodec2_mtk_vdec.so',
+     'vendor/lib64/libcodec2_mtk_venc.so'): codec2_fixup()
+        .replace_needed('libformatter.so', 'libformatter_mtk.so'),
 
     # The crash handler runs inside the codec service and needs these two system calls.
     # Without them the service is killed halfway through reporting a crash and no
