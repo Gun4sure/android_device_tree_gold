@@ -80,6 +80,14 @@ blob_fixups: blob_fixups_user_type = {
         .replace_needed('libaudio_aidl_conversion_common_ndk.so',
                         'libaudio_aidl_conversion_common_ndk_prebuilt.so'),
 
+    # MediaTek's Bluetooth audio interface is built from hardware/mediatek. These were built
+    # against its V1 together with version 3 of the common audio types, which the source
+    # pairs with V3.
+    ('vendor/lib64/android.hardware.bluetooth.audio-impl-mediatek.so',
+     'vendor/lib64/libbluetooth_audio_session_aidl_mtk.so'): blob_fixup()
+        .replace_needed('vendor.mediatek.hardware.bluetooth.audio-V1-ndk.so',
+                        'vendor.mediatek.hardware.bluetooth.audio-V3-ndk.so'),
+
     'vendor/lib64/android.hardware.audio.core-impl-mediatek.so': blob_fixup()
         .add_needed('libaudioutils_shim.so')
         .replace_needed('libaudio_aidl_conversion_common_ndk.so',
