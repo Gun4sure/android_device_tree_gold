@@ -1984,7 +1984,6 @@ vendor/lib64/APUWareUtilsAidlServer.so
 vendor/lib64/libneuralnetworks_sl_driver_mtk_legacy_prebuilt.so;DISABLE_CHECKELF
 vendor/lib64/libnputils.so
 vendor/lib64/vendor.mediatek.hardware.apuware.utils-V1-ndk.so
-vendor/lib64/vendor.mediatek.hardware.mtkpower-V2-ndk.so
 vendor/lib64/mt6833/libnir_neon_driver.so:vendor/lib64/libnir_neon_driver.so
 vendor/lib64/libapu_mdw.so
 vendor/lib64/libarmnn_ndk.mtk.vndk.so
@@ -2011,7 +2010,6 @@ system_ext/etc/permissions/com.android.hotwordenrollment.common.util.xml
 system_ext/framework/com.android.hotwordenrollment.common.util.jar
 
 # Power
-vendor/lib64/vendor.mediatek.hardware.mtkpower-V1-ndk.so
 vendor/lib64/vendor.mediatek.hardware.power@2.0.so
 
 # IMS

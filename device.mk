@@ -283,7 +283,10 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     libmtkperf_client_vendor \
-    libpowerhalwrap_vendor
+    libpowerhalwrap_vendor \
+    vendor.mediatek.hardware.mtkpower-service.stub
+
+$(call soong_config_set_bool,libmtkperf_client,powerhalwrap_aidl,true)
 
 # libperfmgr requires these profile names, but MT6833 has no Pixel
 # /proc/vendor_sched/sched_qos interface; keep the vendor definitions no-op.
