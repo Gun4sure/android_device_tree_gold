@@ -113,8 +113,16 @@ blob_fixups: blob_fixups_user_type = {
     'vendor/lib64/libgoodixhwfingerprint.so': blob_fixup()
         .replace_needed('libvendor.xiaomi.hardware.fx.tunnel@1.0.so', 'vendor.xiaomi.hardware.fx.tunnel@1.0.so'),
 
-    ('vendor/bin/mnld',
-     'vendor/lib64/libcam.utils.sensorprovider.so',
+    # MediaTek's navigation library is installed as libmnl_mtk, because the platform now has
+    # a libmnl of its own (the netlink library).
+    'vendor/bin/mnld': blob_fixup()
+        .replace_needed(
+            'android.hardware.sensors-V2-ndk.so',
+            'android.hardware.sensors-V3-ndk.so',
+        )
+        .replace_needed('libmnl.so', 'libmnl_mtk.so'),
+
+    ('vendor/lib64/libcam.utils.sensorprovider.so',
      'vendor/lib64/libaalservice.so'): blob_fixup()
         .replace_needed(
             'android.hardware.sensors-V2-ndk.so',
