@@ -1749,8 +1749,6 @@ vendor/etc/mali_platform.config
 vendor/etc/vintf/manifest/mapper.mediatek.xml
 vendor/lib/libged.so
 vendor/lib/libgralloc_extra.so
-vendor/lib/libion_mtk.so
-vendor/lib/libion_ulit.so
 vendor/lib/libladder.so
 vendor/lib/mt6833/libmml.so:vendor/lib/libmml.so
 vendor/lib/egl/libGLES_mali.so
@@ -1801,8 +1799,6 @@ vendor/lib64/libgralloc_metadata.so
 vendor/lib/libgralloctypes_mtk.so
 vendor/lib64/libgralloctypes_mtk.so
 vendor/lib64/libhdrvideo.so
-vendor/lib64/libion_mtk.so
-vendor/lib64/libion_ulit.so
 vendor/lib64/libladder.so
 vendor/lib64/libmml.so
 vendor/lib64/libOpenCL.so
