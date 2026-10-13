@@ -9,6 +9,8 @@ What is untested, wrong, not done or not possible on this device, beyond the row
 - Dual SIM
 - China Telecom SIM
 - Wi-Fi calling, video calls
+- Significant motion sensor
+- Patching vendor_boot with Magisk or KernelSU
 
 ## Known issues
 
