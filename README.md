@@ -12,6 +12,14 @@ Tested on one China unit (2312DRAABC, `gold_cn`). The configuration for the Indi
 Dhterech, whose tree this is, and those he credits: based on xiaomi-mt6833-dev/device_xiaomi_mt6833-common, aeronruless (telegram) and linastorvaldz (github)'s work, with mt6897-devs/device_xiaomi_duchamp and LineageOS/android_device_xiaomi_rosemary as reference.
 
 Dhterech's tree is built on claxten10's [mt6833-devs/android_device_xiaomi_gold](https://github.com/mt6833-devs/android_device_xiaomi_gold).
+
+The commits on top of Dhterech's follow other trees in places; each says so in its message:
+
+- cristidclxvi's [android_device_xiaomi_camellia](https://github.com/cristidclxvi/android_device_xiaomi_camellia): how double tap to wake is switched, and two Wi-Fi settings.
+- LineageOS's [android_device_motorola_mt6768-common](https://github.com/LineageOS/android_device_motorola_mt6768-common): the stock AIDL audio service, the IMS files, the mtkpower stubs, the GNSS declarations, and the seven changes for LineageOS 24.0 by Nolen Johnson, Michael Bestas, Nicholas Lim, Elias Gheeraert, Mashopy and Giovanni Ricca.
+- LineageOS's android_device_motorola_mt6879-common, android_device_xiaomi_rosemary and android_device_xiaomi_mt6768-common, and crDroid's android_device_xiaomi_everpal, for what to take from the stock images and how.
+- LineageOS's android_device_motorola_lamu, for building against a prebuilt kernel's headers.
+- bengris32, whose patch for Motorola's ImsService ours repeats on this device's build of the app.
 ```
 #
 # SPDX-FileCopyrightText: The LineageOS Project
