@@ -40,6 +40,7 @@ What is untested, wrong, not done or not possible on this device, beyond the row
 | Hotspot connection tracking | Closed TCP connections of hotspot clients stay in the kernel's table for up to five days, a behaviour of AOSP's tethering offload. No measurable cost, so not patched. |
 | Offline charging screen | Wakes with the power key only, as in AOSP. |
 | ADB in recovery | Not pre-authorised. |
+| Factory reset protection | Left off. The framework would read the FRP partition, and a build without Google apps has no way to clear what a Google-equipped system left there: coming from one, the screen lock could not be set. With the bootloader unlocked, `fastboot erase frp` removes the protection anyway. |
 | Status bar and cutout | The overflow dot has uneven space around it, and in landscape apps are inset on the cutout side only. Both are stock Android behaviour. |
 
 ## Not possible
