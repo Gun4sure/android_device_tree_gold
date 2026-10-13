@@ -16,7 +16,7 @@ What is untested, wrong, not done or not possible on this device, beyond the row
 | --- | --- |
 | Offline charging while an alarm is set | With an alarm set in the Clock app, a powered-off phone on a charger can show the Redmi logo over and over instead of the charging screen. With no alarm set it goes straight to the charging screen. Cause not found yet. |
 | Fast charger on the lock screen | The lock screen does not say when the charger is a fast one. The charger driver does not report the standard current and voltage limits. |
-| Add-ons across updates | Every update logs `Backuptool postinstall step failed`. The update completes, but that step is the one that carries add-ons over. Not looked into. |
+| Add-ons across updates | Every update logs `Backuptool postinstall step failed. ret=32512`, and it is harmless. LineageOS's update_engine decides whether to run the add-on scripts by reading an ext4 mount count, and does so for every partition with a post-install step. For system it reads 0 and skips, which is right with no add-ons installed. For vendor, which is EROFS, the same bytes are not a mount count; it reads a large number, mounts vendor and fails to find the script there. Carrying real add-ons over an update has not been tried. |
 | SELinux denials | Two have been logged now and then and not traced: the positioning daemon reading a property, the media provider at the root directory. No effect seen. |
 | DNG photos | Decoding several DNG files at the same moment can crash the app, about once in twenty tries with four threads. It is a race in AOSP's DNG library and is not patched. |
 
