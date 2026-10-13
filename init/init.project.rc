@@ -141,10 +141,6 @@ on boot
 #N17 code for HQ-404538 by kejunlin at 20240814 start
 on boot
 
-on property:vendor.sysctl.tx=0
-    exec /vendor/bin/iwpriv wlan0 driver "SET_PWR_CTRL MySar 2"
-on property:vendor.sysctl.tx=1
-    exec /vendor/bin/iwpriv wlan0 driver "SET_PWR_CTRL MySar 1"
 #N17 code for HQ-404538 by kejunlin at 20240814 end
 
 #N17-V code for HQ-407327 by p-tangchuanjing at 2024/9/9 start
