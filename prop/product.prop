@@ -27,4 +27,4 @@ persist.dbg.vt_avail_ovr=1
 persist.dbg.wfc_avail_ovr=1
 
 # Updates: the list of published builds
-lineage.updater.uri=https://raw.githubusercontent.com/Star-caorui/lineageos-gold/main/updates.json
+lineage.updater.uri=https://raw.githubusercontent.com/Star-caorui/lineageos-gold/main/updates/{incr}.json
