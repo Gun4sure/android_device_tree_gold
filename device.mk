@@ -265,6 +265,7 @@ PRODUCT_PACKAGES += \
     TetheringConfigOverlay \
     NetworkStackOverlayGold \
     SettingsResOverlayGold \
+    UpdaterOverlayGold \
     WifiOverlay
 
 PRODUCT_PACKAGES += \
