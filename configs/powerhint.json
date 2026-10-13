@@ -87,6 +87,16 @@
       "ResetOnInit": true
     },
     {
+      "Name": "UclampForegroundMin",
+      "Path": "/dev/cpuctl/foreground/cpu.uclamp.min",
+      "Values": [
+        "30",
+        "0"
+      ],
+      "DefaultIndex": 1,
+      "ResetOnInit": true
+    },
+    {
       "Name": "GPUExpensiveRendering",
       "Path": "/sys/kernel/ged/hal/custom_boost_gpu_freq",
       "Values": [
@@ -158,6 +168,12 @@
       "Node": "GPUExpensiveRendering",
       "Duration": 0,
       "Value": "32"
+    },
+    {
+      "PowerHint": "EXPENSIVE_RENDERING",
+      "Node": "UclampForegroundMin",
+      "Duration": 0,
+      "Value": "30"
     },
     {
       "PowerHint": "INTERACTION",
