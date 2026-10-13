@@ -1,0 +1,4 @@
+# MPE, the sensor-aided part of the positioning daemon, reaches the framework's sensor service
+# over AIDL. MediaTek's public policy only covers the HIDL sensor service; stock's has both.
+binder_use(mnld)
+allow mnld fwk_sensor_service:service_manager find;
