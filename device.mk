@@ -81,6 +81,11 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     MtkInCallService
 
+# Translates the framework's key-value audio parameters, that one included, for the audio HAL.
+# Stock's own translator cannot read what Android 17 sends it.
+PRODUCT_PACKAGES += \
+    android.hardware.audio.parameter_parser.service
+
 PRODUCT_PACKAGES += \
     libaecsw \
     libagc1sw \

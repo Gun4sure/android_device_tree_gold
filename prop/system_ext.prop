@@ -1,0 +1,2 @@
+# Lets the framework hand vendor audio parameters to the translator in system_ext
+ro.audio.ihaladaptervendorextension_enabled=true

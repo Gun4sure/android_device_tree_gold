@@ -68,13 +68,8 @@ def codec2_fixup() -> blob_fixup:
 
 blob_fixups: blob_fixups_user_type = {
 
-    # Stock's AIDL audio service. Its helper on the system side was built against a version of
-    # the audio types library that Android 16 no longer has under that name.
-    'system_ext/bin/hw/android.hardware.audio.parameter_parser.service': blob_fixup()
-        .replace_needed('av-audio-types-aidl-V1-ndk.so', 'av-audio-types-aidl-V3-ndk.so'),
-
-    # The service converts between framework and HAL types with the Android 15 layout of that
-    # library, so it gets stock's copy under another name.
+    # Stock's AIDL audio service converts between framework and HAL types with the Android 15
+    # layout of the conversion library, so it gets stock's copy under another name.
     ('vendor/bin/hw/android.hardware.audio.service-aidl.mediatek',
      'vendor/lib64/hw/android.hardware.soundtrigger3-impl.so'): blob_fixup()
         .replace_needed('libaudio_aidl_conversion_common_ndk.so',

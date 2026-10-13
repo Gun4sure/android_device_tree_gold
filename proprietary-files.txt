@@ -1,9 +1,6 @@
 # All blobs are from V3.0.5.0.VNQMIXM
 
 # Audio
-system/lib64/av-audio-types-aidl-V1-ndk.so:system/lib64/av-audio-types-aidl-V3-ndk.so;FIX_SONAME
-system_ext/bin/hw/android.hardware.audio.parameter_parser.service
-system_ext/etc/init/android.hardware.audio.parameter_parser.service.rc
 vendor/bin/hw/android.hardware.audio.service-aidl.mediatek
 vendor/etc/init/android.hardware.audio.service-aidl.mediatek.rc
 vendor/etc/vintf/manifest/android.hardware.audio.effect.service-aidl.xml
