@@ -117,6 +117,17 @@ BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)-k
 
 BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)-kernel/modules.load.recovery))
 
+# The touchscreen drivers are only in vendor_dlkm on stock, which recovery
+# does not mount. A copy goes into the vendor ramdisk, with the two modules
+# they need there, and init.recovery.mt6833.rc loads them.
+BOARD_VENDOR_RAMDISK_KERNEL_MODULES += \
+    $(addprefix $(DEVICE_PATH)-kernel/vendor_dlkm/, \
+        mt6359p-accdet.ko \
+        hq_notifier.ko \
+        xiaomi_touch.ko \
+        focaltech_tp.ko \
+        gt9916r.ko)
+
 BOOT_KERNEL_MODULES := $(BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD) $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD)
 
 # Partitions

@@ -3,3 +3,13 @@ on init
     setprop sys.usb.configfs 1
 
     setprop sys.usb.controller "musb-hdrc"
+
+    # The touchscreen, for the menu. hq_notifier hooks a function of the
+    # headset detection driver and focaltech_tp needs hq_notifier. They are
+    # loaded here and not in the first stage, where a module that fails to
+    # load stops recovery from starting.
+    insmod /lib/modules/mt6359p-accdet.ko
+    insmod /lib/modules/hq_notifier.ko
+    insmod /lib/modules/xiaomi_touch.ko
+    insmod /lib/modules/focaltech_tp.ko
+    insmod /lib/modules/gt9916r.ko
