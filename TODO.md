@@ -8,9 +8,7 @@ What is untested, wrong, not done or not possible on this device, beyond the row
 - USB OTG
 - Dual SIM
 - China Telecom SIM
-- Wi-Fi calling, video calls
-- Significant motion sensor
-- Patching vendor_boot with Magisk or KernelSU
+- Video calls
 
 ## Known issues
 
@@ -29,7 +27,7 @@ What is untested, wrong, not done or not possible on this device, beyond the row
 | 108 MP, portrait and 16 MP front photos | The camera HAL only offers them to the stock camera app, so the rear camera outputs 12 MP and the front 4 MP. Porting that app is not planned. |
 | Stronger video stabilisation | It takes a patch to the camera app, and we do not carry one. |
 | More screen-off gestures | Double tap and single tap are offered. The FocalTech touch driver also lists swipes and letters; nobody has checked that the touch firmware reports them. |
-| Volume boost | Stock's 200% volume is switched on from MIUI's side. The audio HAL's own switches for it have not been tried. |
+| Volume boost | Stock's 200% volume is switched on from MIUI's side. The audio HAL has a switch for louder calls, `SET_SUPER_VOLUME`, which nothing sets yet; what makes media louder on stock has not been found. |
 | Dolby, MiSound, spatial audio | Stock's effect libraries are not included. |
 | Display and touch extras | DC dimming, colour modes and game-mode touch tuning are driven by MIUI services that are not included. |
 | "Hey Google" with the screen off | Untested. The sound trigger HAL and the enrollment apps are stock's and in place, but trying it needs the Google app. |
