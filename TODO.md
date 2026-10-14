@@ -5,7 +5,6 @@ What is untested, wrong, not done or not possible on this device, beyond the row
 ## Not tested
 
 - Fast charging on units with the LN8000 charge pump
-- USB OTG
 - Dual SIM
 - China Telecom SIM
 - Video calls
