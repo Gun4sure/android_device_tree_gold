@@ -4,7 +4,7 @@ What is untested, wrong, not done or not possible on this device, beyond the row
 
 ## Not tested
 
-- Fast charging
+- Fast charging on units with the LN8000 charge pump
 - USB OTG
 - Dual SIM
 - China Telecom SIM
@@ -15,6 +15,7 @@ What is untested, wrong, not done or not possible on this device, beyond the row
 | | |
 | --- | --- |
 | Offline charging while an alarm is set | With an alarm set in the Clock app, a powered-off phone on a charger can show the Redmi logo over and over instead of the charging screen. With no alarm set it goes straight to the charging screen. Cause not found yet. |
+| Charging power with the screen on | Fast charging works on a unit with the SC8551 charge pump: with Xiaomi's 33 W charger the adapter passes Xiaomi's check, the PPS profile is chosen and the battery takes about 15 W at first. With the screen on, Xiaomi's thermal daemon then raises the charging thermal level and it settles at 8 to 10 W. With the daemon stopped it held about 20 W at 54 %, with the battery at 41 °C and the charge pump at 54 °C. On stock the system switches the daemon between scene profiles (charging with the screen off, games, video); nothing does that here, so it always uses the default profile. Not compared with stock yet. Chargers that fail Xiaomi's check start lower, as on stock. |
 | Fast charger on the lock screen | The lock screen does not say when the charger is a fast one. The charger driver does not report the standard current and voltage limits. |
 | Add-ons across updates | Every update logs `Backuptool postinstall step failed. ret=32512`, and it is harmless. LineageOS's update_engine decides whether to run the add-on scripts by reading an ext4 mount count, and does so for every partition with a post-install step. For system it reads 0 and skips, which is right with no add-ons installed. For vendor, which is EROFS, the same bytes are not a mount count; it reads a large number, mounts vendor and fails to find the script there. Carrying real add-ons over an update has not been tried. |
 | SELinux denials | Two have been logged now and then and not traced: the positioning daemon reading a property, the media provider at the root directory. No effect seen. |
