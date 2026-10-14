@@ -30,7 +30,8 @@ What is untested, wrong, not done or not possible on this device, beyond the row
 | More screen-off gestures | Double tap and single tap are offered. The FocalTech touch driver also lists swipes and letters; nobody has checked that the touch firmware reports them. |
 | Volume boost | Stock's 200% speaker volume is driven by MIUI's framework: past the top step it sends `SpkVolIdx` and `SuperStream` to the audio HAL, which switches the scene of Awinic's amplifier algorithm. Here the HAL takes the two keys but never switches, because it does not see a stream of that type playing, and nothing in LineageOS sends them. Only units with the AW87xxx amplifier could show an effect; the test unit has the SIA81xx. The HAL also has a switch for louder calls, `SET_SUPER_VOLUME`, which nothing sets yet. |
 | Dolby, MiSound, spatial audio | Stock's effect libraries are not included. |
-| Display and touch extras | DC dimming, colour modes and game-mode touch tuning are driven by MIUI services that are not included. |
+| DC dimming and colour modes | On stock these come from Xiaomi's `displayfeature` service, which only MIUI's settings talk to. LineageOS would show them through LiveDisplay, and that needs a small service of our own, like the one in LineageOS's android_device_motorola_mt6879-common, which offers anti-flicker and sunlight enhancement by writing one panel node each. The panel driver has nodes under `/sys/class/mi_display/disp-DSI-0/` (`dc_status`, `cabc_mode`, `disp_param`, `gir`); nobody has tried what writing them does. |
+| Game-mode touch tuning | Driven by Xiaomi's `touchfeature` service, which is not included. |
 | "Hey Google" with the screen off | Untested. The sound trigger HAL and the enrollment apps are stock's and in place, but trying it needs the Google app. |
 | Xiaomi and Alexa wake words | The models are not included. |
 | Per-carrier VoLTE settings | VoLTE is switched on for every carrier with a debug property. |
