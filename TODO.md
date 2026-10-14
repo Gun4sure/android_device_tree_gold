@@ -26,6 +26,7 @@ What is untested, wrong, not done or not possible on this device, beyond the row
 | --- | --- |
 | 108 MP, portrait and 16 MP front photos | The camera HAL only offers them to the stock camera app, so the rear camera outputs 12 MP and the front 4 MP. Porting that app is not planned. |
 | Stronger video stabilisation | It takes a patch to the camera app, and we do not carry one. |
+| Xiaomi's camera app from a root module | The Leica camera modules for AOSP ROMs open to a black preview and ignore taps. The app looks up the 18-argument constructor of `StreamConfigurationMap` that Android 14 had; LineageOS has only the current ones, while crDroid, Lunaris and AxionOS add the old ones back with two patches to `frameworks/base`. We do not carry platform patches so far. |
 | More screen-off gestures | Double tap and single tap are offered. The FocalTech touch driver also lists swipes and letters; nobody has checked that the touch firmware reports them. |
 | Volume boost | Stock's 200% volume is switched on from MIUI's side. The audio HAL has a switch for louder calls, `SET_SUPER_VOLUME`, which nothing sets yet; what makes media louder on stock has not been found. |
 | Dolby, MiSound, spatial audio | Stock's effect libraries are not included. |
