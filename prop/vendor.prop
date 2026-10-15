@@ -210,6 +210,10 @@ debug.sf.early.sf.duration=13800000
 debug.sf.early.app.duration=10000000
 debug.sf.earlyGl.sf.duration=13800000
 debug.sf.earlyGl.app.duration=10000000
+# At 60 Hz stock gives apps a full 20 ms, as LineageOS can now set per refresh rate
+debug.sf.late.app.duration.60=20000000
+debug.sf.early.app.duration.60=20000000
+debug.sf.earlyGl.app.duration.60=20000000
 debug.sf.hwc.min.duration=8500000
 debug.sf.treat_170m_as_sRGB=1
 debug.sf.frame_rate_multiple_threshold=120
