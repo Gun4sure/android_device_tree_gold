@@ -41,6 +41,7 @@ What is untested, wrong, not done or not possible on this device, beyond the row
 | SAR and front colour sensors | Present, unused. |
 | MPEG-4 and H.263 hardware encoding | Not ported. |
 | Hotspot connection tracking | Closed TCP connections of hotspot clients stay in the kernel's table for up to five days, a behaviour of AOSP's tethering offload. No measurable cost, so not patched. |
+| Always-on display | The panel runs in video mode, so while it shows anything the display path stays on and the system cannot suspend (about 290 mA). Switched to command mode in doze (branch `aod-experiment` of the modules repo), the panel keeps its last frame from its own RAM with no frames sent, which is what a suspending AOD needs. What does not work yet: the panel's TE signal does not come back through the MT6382 bridge; a frame written in command mode tears and then the screen goes black; leaving doze does not bring video mode back. Next to try: send updates in video mode and stop the stream in between. |
 | Offline charging screen | Wakes with the power key only, as in AOSP. |
 | ADB in recovery | Not pre-authorised. |
 | Factory reset protection | Left off. The framework would read the FRP partition, and a build without Google apps has no way to clear what a Google-equipped system left there: coming from one, the screen lock could not be set. With the bootloader unlocked, `fastboot erase frp` removes the protection anyway. |
@@ -50,7 +51,6 @@ What is untested, wrong, not done or not possible on this device, beyond the row
 
 | | |
 | --- | --- |
-| Always-on display | With the stock display driver the system cannot suspend while the panel shows anything, about 290 mA. Left out in favour of the wake gestures. |
 | Hotspot on another band than Wi-Fi | There is a single Wi-Fi radio: while connected to 5 GHz Wi-Fi the hotspot can only use the same channel. |
 | Wi-Fi 6 | The chip reports no HE capability. The link tops out at 433 Mbps. |
 | Hotspot hardware offload | The modem's offload driver reports itself disabled. |
