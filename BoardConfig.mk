@@ -82,11 +82,35 @@ BOARD_KERNEL_IMAGE_NAME := Image.gz
 BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)-kernel/dtbo.img
 BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)-kernel/dtb
 
-# The kernel and its modules are the stock ones. With GOLD_KERNEL_FROM_SOURCE=true
-# in the environment they are built from source instead, which needs the kernel
-# repositories of local_manifests' gold-kernel-source group. The DTB and DTBO are the
-# stock ones either way.
-GOLD_KERNEL_FROM_SOURCE ?= false
+# What the kernel is made of, picked in the environment; both default to stock.
+# - GOLD_GKI, the kernel image and the GKI modules in system_dlkm: stock is the
+#   build of Google's GKI that stock ships; latest is Google's newest of the same
+#   KMI generation (gold-kernel's gki/); source builds them from source.
+# - GOLD_VENDOR_MODULES, the modules in vendor_boot and vendor_dlkm: stock is
+#   Xiaomi's and MediaTek's; source builds them from source.
+# Stock vendor modules only load on Google's kernel. Building from source needs
+# the kernel repositories of local_manifests' gold-kernel-source group. The DTB
+# and DTBO are the stock ones either way.
+GOLD_GKI ?= stock
+GOLD_VENDOR_MODULES ?= stock
+GOLD_GKI_LATEST := 16498190
+
+ifeq ($(filter stock latest source,$(GOLD_GKI)),)
+    $(error GOLD_GKI is stock, latest or source, not '$(GOLD_GKI)')
+endif
+ifeq ($(filter stock source,$(GOLD_VENDOR_MODULES)),)
+    $(error GOLD_VENDOR_MODULES is stock or source, not '$(GOLD_VENDOR_MODULES)')
+endif
+ifeq ($(GOLD_GKI)-$(GOLD_VENDOR_MODULES),source-stock)
+    $(error GOLD_GKI=source needs GOLD_VENDOR_MODULES=source: stock vendor modules only load on Google's kernel)
+endif
+
+# Google's kernel image, its GKI modules and their symbol versions
+ifeq ($(GOLD_GKI),latest)
+GOLD_GKI_DIR := $(DEVICE_PATH)-kernel/gki/$(GOLD_GKI_LATEST)
+else
+GOLD_GKI_DIR := $(DEVICE_PATH)-kernel
+endif
 
 # Modules of MIUI's app freezer (Millet). They load on this kernel, but nothing outside
 # MIUI talks to them. Binder itself is provided by GKI; binder_prio remains.
@@ -109,7 +133,7 @@ GOLD_RECOVERY_TOUCH_MODULES := \
     focaltech_tp.ko \
     gt9916r.ko
 
-ifneq ($(GOLD_KERNEL_FROM_SOURCE),true)
+ifeq ($(GOLD_VENDOR_MODULES),stock)
 
 TARGET_KERNEL_SOURCE := kernel/xiaomi/gold-6.6
 TARGET_KERNEL_CONFIG := \
@@ -117,8 +141,8 @@ TARGET_KERNEL_CONFIG := \
 	gold.config
 
 TARGET_FORCE_PREBUILT_KERNEL := true
-TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)-kernel/kernel
-BOARD_SYSTEM_DLKM_SRC := $(DEVICE_PATH)-kernel/system_dlkm
+TARGET_PREBUILT_KERNEL := $(GOLD_GKI_DIR)/kernel
+BOARD_SYSTEM_DLKM_SRC := $(GOLD_GKI_DIR)/system_dlkm
 TARGET_PREBUILT_KERNEL_HEADERS := $(DEVICE_PATH)/kernel-headers/kernel-uapi-headers.tar.gz
 
 BOARD_VENDOR_KERNEL_MODULES := $(filter-out \
@@ -145,6 +169,8 @@ else
 # From source: the Android common kernel, MediaTek's device modules and
 # MediaTek's connectivity, GPU and fpsgo modules, all from Xiaomi's releases.
 # Userspace keeps the prebuilt uapi headers that vendorsetup.sh points Soong at.
+# With GOLD_GKI=stock or latest the kernel is built only for the vendor modules
+# to build against, and kernel-prebuilt ships Google's image and GKI modules.
 GOLD_KERNEL_DIR := kernel/xiaomi
 TARGET_KERNEL_SOURCE := $(GOLD_KERNEL_DIR)/gold
 
@@ -188,6 +214,13 @@ TARGET_KERNEL_EXT_MODULES := \
     gold-mediatek_modules/sched_cus \
     ../../$(DEVICE_PATH)/kernel-prebuilt
 
+# On Google's kernel, kernel-gki comes first, so that all of them get the
+# CRCs of Google's build, and kernel-prebuilt is told where that build is.
+ifneq ($(GOLD_GKI),source)
+TARGET_KERNEL_EXT_MODULES := ../../$(DEVICE_PATH)/kernel-gki $(TARGET_KERNEL_EXT_MODULES)
+TARGET_KERNEL_ADDITIONAL_FLAGS += GOLD_GKI_DIR=$(abspath $(GOLD_GKI_DIR))
+endif
+
 # MIUI's memory reporting is left out as well. miev, MIUI's event reporting,
 # stays: stock's mediatek-drm and xiaomi_touch call into it.
 GOLD_KERNEL_MODULES_LEFT_OUT := $(GOLD_UNUSED_VENDOR_KERNEL_MODULES) mi_memory.ko
@@ -195,8 +228,8 @@ GOLD_KERNEL_MODULES_LEFT_OUT := $(GOLD_UNUSED_VENDOR_KERNEL_MODULES) mi_memory.k
 # Google's modules go to system_dlkm, as on stock; everything else that is
 # built goes to vendor_dlkm, and the ones listed for the vendor ramdisk are
 # copied there as well. The load lists are stock's.
-SYSTEM_KERNEL_MODULES := $(notdir $(wildcard $(DEVICE_PATH)-kernel/system_dlkm/lib/modules/*.ko))
-BOARD_SYSTEM_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)-kernel/system_dlkm/lib/modules/modules.load))
+SYSTEM_KERNEL_MODULES := $(notdir $(wildcard $(GOLD_GKI_DIR)/system_dlkm/lib/modules/*.ko))
+BOARD_SYSTEM_KERNEL_MODULES_LOAD := $(strip $(shell cat $(GOLD_GKI_DIR)/system_dlkm/lib/modules/modules.load))
 
 # Stock's lists, with sec.ko under its new name (see the masp Makefile in
 # gold-modules) and without Google's modules, which are in system_dlkm.
