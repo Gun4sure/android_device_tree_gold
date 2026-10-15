@@ -79,18 +79,14 @@ TARGET_KERNEL_NO_GCC := true
 TARGET_KERNEL_VERSION := 6.6
 BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 BOARD_KERNEL_IMAGE_NAME := Image.gz
-TARGET_KERNEL_SOURCE := kernel/xiaomi/gold-6.6
-TARGET_KERNEL_CONFIG := \
-	gki_defconfig \
-	gold.config
-
-# The kernel, DTB, DTBO and vendor modules are the stock ones
-TARGET_FORCE_PREBUILT_KERNEL := true
-TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)-kernel/kernel
 BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)-kernel/dtbo.img
 BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)-kernel/dtb
-BOARD_SYSTEM_DLKM_SRC := $(DEVICE_PATH)-kernel/system_dlkm
-TARGET_PREBUILT_KERNEL_HEADERS := $(DEVICE_PATH)/kernel-headers/kernel-uapi-headers.tar.gz
+
+# The kernel and its modules are the stock ones. With GOLD_KERNEL_FROM_SOURCE=true
+# in the environment they are built from source instead, which needs the kernel
+# repositories of local_manifests' gold-kernel-source group. The DTB and DTBO are the
+# stock ones either way.
+GOLD_KERNEL_FROM_SOURCE ?= false
 
 # Modules of MIUI's app freezer (Millet). They load on this kernel, but nothing outside
 # MIUI talks to them. Binder itself is provided by GKI; binder_prio remains.
@@ -102,6 +98,28 @@ GOLD_UNUSED_VENDOR_KERNEL_MODULES := \
     millet_oem_cgroup.ko \
     millet_pkg.ko \
     millet_sig.ko
+
+# The touchscreen drivers are only in vendor_dlkm on stock, which recovery
+# does not mount. A copy goes into the vendor ramdisk, with the two modules
+# they need there, and init.recovery.mt6833.rc loads them.
+GOLD_RECOVERY_TOUCH_MODULES := \
+    mt6359p-accdet.ko \
+    hq_notifier.ko \
+    xiaomi_touch.ko \
+    focaltech_tp.ko \
+    gt9916r.ko
+
+ifneq ($(GOLD_KERNEL_FROM_SOURCE),true)
+
+TARGET_KERNEL_SOURCE := kernel/xiaomi/gold-6.6
+TARGET_KERNEL_CONFIG := \
+	gki_defconfig \
+	gold.config
+
+TARGET_FORCE_PREBUILT_KERNEL := true
+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)-kernel/kernel
+BOARD_SYSTEM_DLKM_SRC := $(DEVICE_PATH)-kernel/system_dlkm
+TARGET_PREBUILT_KERNEL_HEADERS := $(DEVICE_PATH)/kernel-headers/kernel-uapi-headers.tar.gz
 
 BOARD_VENDOR_KERNEL_MODULES := $(filter-out \
     $(addprefix $(DEVICE_PATH)-kernel/vendor_dlkm/,$(GOLD_UNUSED_VENDOR_KERNEL_MODULES)), \
@@ -117,18 +135,84 @@ BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)-k
 
 BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)-kernel/modules.load.recovery))
 
-# The touchscreen drivers are only in vendor_dlkm on stock, which recovery
-# does not mount. A copy goes into the vendor ramdisk, with the two modules
-# they need there, and init.recovery.mt6833.rc loads them.
 BOARD_VENDOR_RAMDISK_KERNEL_MODULES += \
-    $(addprefix $(DEVICE_PATH)-kernel/vendor_dlkm/, \
-        mt6359p-accdet.ko \
-        hq_notifier.ko \
-        xiaomi_touch.ko \
-        focaltech_tp.ko \
-        gt9916r.ko)
+    $(addprefix $(DEVICE_PATH)-kernel/vendor_dlkm/,$(GOLD_RECOVERY_TOUCH_MODULES))
 
 BOOT_KERNEL_MODULES := $(BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD) $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD)
+
+else
+
+# From source: the Android common kernel, MediaTek's device modules and
+# MediaTek's connectivity, GPU and fpsgo modules, all from Xiaomi's releases.
+# Userspace keeps the prebuilt uapi headers that vendorsetup.sh points Soong at.
+GOLD_KERNEL_DIR := kernel/xiaomi
+TARGET_KERNEL_SOURCE := $(GOLD_KERNEL_DIR)/gold
+
+# gki_defconfig as Google builds it, then MediaTek's and gold's fragments.
+# gold.config keeps the options of the kernel itself as in gki_defconfig.
+TARGET_KERNEL_CONFIG := gki_defconfig
+TARGET_KERNEL_CONFIG_EXT := \
+    $(GOLD_KERNEL_DIR)/gold-modules/kernel/configs/mgk_64_k66.config \
+    $(GOLD_KERNEL_DIR)/gold-modules/kernel/configs/mt6833_overlay.config \
+    $(GOLD_KERNEL_DIR)/gold-modules/kernel/configs/gold.config
+
+# How MediaTek's trees find each other: the device modules' Kconfig is read
+# through KCONFIG_EXT_PREFIX (relative to the kernel source), and the other
+# modules link against them and against each other through these paths.
+# kernel.mk builds the external modules beside KERNEL_OBJ, not in the checkouts.
+TARGET_KERNEL_ADDITIONAL_FLAGS := \
+    KCONFIG_EXT_PREFIX=../gold-modules/ \
+    DEVICE_MODULES_REL_DIR=../gold-modules \
+    DEVICE_MODULES_PATH=$(abspath $(GOLD_KERNEL_DIR)/gold-modules) \
+    DEVCIE_MODULES_INCLUDE=-I$(abspath $(GOLD_KERNEL_DIR)/gold-modules)/include \
+    MTK_KERNEL_MODULES_PATH=$(abspath $(GOLD_KERNEL_DIR)/gold-mediatek_modules) \
+    MTK_KERNEL_MODULES_OUT=$(abspath $(OUT_DIR)/target/product/$(TARGET_DEVICE)/obj/gold-mediatek_modules) \
+    KBUILD_EXTRA_SYMBOLS=$(abspath $(DEVICE_PATH)/kernel-prebuilt/stock.symvers)
+
+# In this order: each one links against those before it. kernel-prebuilt
+# comes last: it adds stock modules where gold's own drivers are not built
+# from source yet, and swaps them in for some that are (see its Makefile).
+TARGET_KERNEL_EXT_MODULE_ROOT := $(GOLD_KERNEL_DIR)
+TARGET_KERNEL_EXT_MODULES := \
+    gold-modules \
+    gold-mediatek_modules/connectivity/common \
+    gold-mediatek_modules/connectivity/wlan/adaptor/build/connac1x \
+    gold-mediatek_modules/connectivity/wlan/core/gen4m/build/connac1x/6833 \
+    gold-mediatek_modules/connectivity/bt/mt66xx/wmt \
+    gold-mediatek_modules/connectivity/gps/gps_stp \
+    gold-mediatek_modules/connectivity/fmradio \
+    gold-mediatek_modules/gpu \
+    gold-mediatek_modules/fpsgo_cus \
+    gold-mediatek_modules/met_drv_v3 \
+    gold-mediatek_modules/met_drv_v3/met_api \
+    gold-mediatek_modules/sched_cus \
+    ../../$(DEVICE_PATH)/kernel-prebuilt
+
+# MIUI's memory reporting is left out as well. miev, MIUI's event reporting,
+# stays: stock's mediatek-drm and xiaomi_touch call into it.
+GOLD_KERNEL_MODULES_LEFT_OUT := $(GOLD_UNUSED_VENDOR_KERNEL_MODULES) mi_memory.ko
+
+# Google's modules go to system_dlkm, as on stock; everything else that is
+# built goes to vendor_dlkm, and the ones listed for the vendor ramdisk are
+# copied there as well. The load lists are stock's.
+SYSTEM_KERNEL_MODULES := $(notdir $(wildcard $(DEVICE_PATH)-kernel/system_dlkm/lib/modules/*.ko))
+BOARD_SYSTEM_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)-kernel/system_dlkm/lib/modules/modules.load))
+
+# Stock's lists, with sec.ko under its new name (see the masp Makefile in
+# gold-modules) and without Google's modules, which are in system_dlkm.
+gold_stock_load_list = $(patsubst sec.ko,mtk_sec.ko,$(filter-out \
+    $(GOLD_KERNEL_MODULES_LEFT_OUT) $(SYSTEM_KERNEL_MODULES), \
+    $(strip $(shell cat $(DEVICE_PATH)-kernel/$(1)))))
+BOARD_VENDOR_KERNEL_MODULES_LOAD := $(call gold_stock_load_list,modules.load.vendor)
+BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(call gold_stock_load_list,modules.load.vendor_ramdisk)
+BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(call gold_stock_load_list,modules.load.recovery)
+
+BOOT_KERNEL_MODULES := $(filter-out $(GOLD_KERNEL_MODULES_LEFT_OUT), \
+    $(BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD) \
+    $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD) \
+    $(GOLD_RECOVERY_TOUCH_MODULES))
+
+endif
 
 # Partitions
 BOARD_FLASH_BLOCK_SIZE := 262144
