@@ -1,6 +1,5 @@
 0xa8797e93	goodix_fp_exist	gf_spi_tee	EXPORT_SYMBOL	
 0x12034068	spi_fingerprint	gf_spi_tee	EXPORT_SYMBOL	
-0xc3371615	hq_kallsyms_lookup_name	hq_kallsyms	EXPORT_SYMBOL	
 0x1aa6f93d	sc202cs_aac_read_otp_info	imgsensor_isp6s	EXPORT_SYMBOL	
 0x9b6a7379	sc202cs_sunny2_read_otp_info	imgsensor_isp6s	EXPORT_SYMBOL	
 0x72055099	sc202cs_sunny_read_otp_info	imgsensor_isp6s	EXPORT_SYMBOL	

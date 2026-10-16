@@ -51,12 +51,10 @@ SYSTEM_MAP := $(OUT_DIR)/System.map
 GOLD_STOCK_MODULES := \
     miev.ko \
     binder_prio.ko \
-    cpumaxfreq.ko \
     focaltech_tp.ko \
     fpc1022_tee.ko \
     gf_spi_tee.ko \
     gt9916r.ko \
-    hq_kallsyms.ko \
     mitee.ko
 
 GOLD_STOCK_REPLACEMENTS := \
