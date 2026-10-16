@@ -222,8 +222,11 @@ TARGET_KERNEL_ADDITIONAL_FLAGS += GOLD_GKI_DIR=$(abspath $(GOLD_GKI_DIR))
 endif
 
 # MIUI's memory reporting is left out as well. miev, MIUI's event reporting,
-# stays: stock's mediatek-drm and xiaomi_touch call into it.
-GOLD_KERNEL_MODULES_LEFT_OUT := $(GOLD_UNUSED_VENDOR_KERNEL_MODULES) mi_memory.ko
+# stays: stock's mediatek-drm and xiaomi_touch call into it. So are MIUI's
+# charging event chains (hq_notify) and the charging fault reports to miev
+# (xm_chg_dfs): only stock's charger drivers used them.
+GOLD_KERNEL_MODULES_LEFT_OUT := $(GOLD_UNUSED_VENDOR_KERNEL_MODULES) mi_memory.ko \
+    hq_notify.ko xm_chg_dfs.ko
 
 # Google's modules go to system_dlkm, as on stock; everything else that is
 # built goes to vendor_dlkm, and the ones listed for the vendor ramdisk are

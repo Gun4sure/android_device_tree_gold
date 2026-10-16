@@ -9,8 +9,6 @@
 #   file replaces the source-built one in place. trusted_mem and rpmb-mtk are
 #   here as the trees build them for Trustonic's TEE, which gold does not have
 #   (and turning Trustonic off does not build); stock's use GenieZone only.
-#   xm_chg_dfs here is Redmi Pad SE's, which exports charger notifier calls
-#   that stock's charger_class already has.
 #   ufs-mediatek-mod is Xiaomi's (it reports to miev); the trees' one finds
 #   the LUNs but no disk comes up, so first stage mount fails.
 #   imgsensor_isp6s carries gold's camera sensor drivers; the trees' one has
@@ -52,51 +50,21 @@ SYSTEM_MAP := $(OUT_DIR)/System.map
 
 GOLD_STOCK_MODULES := \
     miev.ko \
-    adapter_class.ko \
-    auth_battery.ko \
-    battery_auth_class.ko \
     binder_prio.ko \
-    charger_class.ko \
     cpumaxfreq.ko \
-    ds28e30_verify.ko \
     focaltech_tp.ko \
     fpc1022_tee.ko \
     gf_spi_tee.ko \
     gt9916r.ko \
-    hq_charger_sysfs.ko \
     hq_kallsyms.ko \
-    hq_notifier.ko \
-    hq_notify.ko \
-    ln8000_charger.ko \
-    mitee.ko \
-    mt6359p_battery.ko \
-    mt6360_pmu_chg.ko \
-    mtk_battery_manager.ko \
-    mtk_charger_algorithm_class.ko \
-    mtk_charger_framework.ko \
-    mtk_chg_type_det.ko \
-    mtk_pd_adapter.ko \
-    mtk_pd_charging.ko \
-    mtk_pep.ko \
-    mtk_pep20.ko \
-    mtk_pep40.ko \
-    mtk_pep50.ko \
-    sc8551x_charger.ko \
-    slg_verify.ko \
-    stick_verify.ko
+    mitee.ko
 
 GOLD_STOCK_REPLACEMENTS := \
-    extcon-mtk-usb.ko \
     imgsensor_isp6s.ko \
     rpmb-mtk.ko \
-    rt_pd_manager.ko \
-    tcpc_class.ko \
-    tcpc_mt6360.ko \
-    tcpci_late_sync.ko \
     trusted_mem.ko \
     ufs-mediatek-mod.ko \
-    xiaomi_touch.ko \
-    xm_chg_dfs.ko
+    xiaomi_touch.ko
 
 KERNELRELEASE := $(shell cat $(OUT_DIR)/include/config/kernel.release)
 
