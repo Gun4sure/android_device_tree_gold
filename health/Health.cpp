@@ -7,6 +7,7 @@
 
 #include <android-base/file.h>
 #include <android-base/logging.h>
+#include <android-base/parseint.h>
 #include <android-base/strings.h>
 #include <android/binder_interface_utils.h>
 #include <health-impl/Health.h>
@@ -20,10 +21,13 @@
 #include <health-impl/ChargerUtils.h>
 #endif
 
+#include <algorithm>
 #include <atomic>
 #include <chrono>
+#include <optional>
 #include <thread>
 
+using aidl::android::hardware::health::BatteryHealthData;
 using aidl::android::hardware::health::HalHealthLoop;
 using aidl::android::hardware::health::Health;
 using aidl::android::hardware::health::HealthInfo;
@@ -39,6 +43,29 @@ constexpr char kInstanceName[] = "default";
 constexpr std::string_view kChargerArg{"--charger"};
 constexpr int32_t kDesignCapacityUah = 5000000;
 constexpr int32_t kLargestPlausibleMahCounter = 20000;
+constexpr char kChargeFull[] = "/sys/class/power_supply/battery/charge_full";
+constexpr char kChargeFullDesign[] = "/sys/class/power_supply/battery/charge_full_design";
+
+std::optional<int64_t> ReadInt(const std::string& path) {
+    std::string value;
+    int64_t out;
+    if (!android::base::ReadFileToString(path, &value) ||
+        !android::base::ParseInt(android::base::Trim(value), &out)) {
+        return std::nullopt;
+    }
+    return out;
+}
+
+// The gauge has no state_of_health node, so AOSP's service reports 0. It does report the full
+// charge it has learned and the design one.
+int32_t StateOfHealth() {
+    const auto full = ReadInt(kChargeFull);
+    const auto design = ReadInt(kChargeFullDesign);
+    if (!full || !design || *full <= 0 || *design <= 0) {
+        return 0;
+    }
+    return static_cast<int32_t>(std::clamp<int64_t>(*full * 100 / *design, 0, 100));
+}
 
 bool ChargeCounterIsMah(int32_t chargeCounter, int32_t batteryLevel, int32_t fullChargeUah) {
     if (chargeCounter <= 0 || chargeCounter > kLargestPlausibleMahCounter || batteryLevel <= 0 ||
@@ -85,6 +112,14 @@ class GoldHealth final : public Health {
         return status;
     }
 
+    ndk::ScopedAStatus getBatteryHealthData(BatteryHealthData* out) override {
+        auto status = Health::getBatteryHealthData(out);
+        if (status.isOk() && out->batteryStateOfHealth <= 0) {
+            out->batteryStateOfHealth = StateOfHealth();
+        }
+        return status;
+    }
+
   protected:
     void UpdateHealthInfo(HealthInfo* healthInfo) override {
         // Kept for getChargeCounterUah, which runs on a binder thread and gets no HealthInfo.
@@ -93,6 +128,10 @@ class GoldHealth final : public Health {
                 NormalizeChargeCounter(healthInfo->batteryChargeCounterUah,
                                        healthInfo->batteryLevel,
                                        FullChargeUah(healthInfo->batteryFullChargeUah));
+        if (healthInfo->batteryHealthData &&
+            healthInfo->batteryHealthData->batteryStateOfHealth <= 0) {
+            healthInfo->batteryHealthData->batteryStateOfHealth = StateOfHealth();
+        }
     }
 
   private:
