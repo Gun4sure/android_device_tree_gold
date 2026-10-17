@@ -6,13 +6,9 @@
 # - GOLD_STOCK_MODULES have no source-built counterpart yet and are added,
 # - GOLD_STOCK_REPLACEMENTS are built from source too, but stock modules above
 #   depend on the stock build of them (their symbol CRCs differ), so the stock
-#   file replaces the source-built one in place. trusted_mem and rpmb-mtk are
-#   here as the trees build them for Trustonic's TEE, which gold does not have
-#   (and turning Trustonic off does not build); stock's use GenieZone only.
-#   ufs-mediatek-mod is Xiaomi's (it reports to miev); the trees' one finds
-#   the LUNs but no disk comes up, so first stage mount fails.
-#   imgsensor_isp6s carries gold's camera sensor drivers; the trees' one has
-#   Redmi Pad SE's, so no camera shows up.
+#   file replaces the source-built one in place. ufs-mediatek-mod is Xiaomi's
+#   (it reports to miev); the trees' one finds the LUNs but no disk comes up,
+#   so first stage mount fails.
 #
 # The files come from device/xiaomi/gold-kernel, where stock's vendor_boot and
 # vendor_dlkm modules are kept. Each module comes off these lists as its
@@ -58,9 +54,6 @@ GOLD_STOCK_MODULES := \
     mitee.ko
 
 GOLD_STOCK_REPLACEMENTS := \
-    imgsensor_isp6s.ko \
-    rpmb-mtk.ko \
-    trusted_mem.ko \
     ufs-mediatek-mod.ko \
     xiaomi_touch.ko
 
