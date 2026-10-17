@@ -3,6 +3,3 @@
 0x04071551	cdev_tevent_alloc	miev	EXPORT_SYMBOL	
 0x2efdafc8	cdev_tevent_destroy	miev	EXPORT_SYMBOL	
 0x74b3b77c	cdev_tevent_write	miev	EXPORT_SYMBOL	
-0x10dc753c	get_ufs_xiaomi	ufs-mediatek-mod	EXPORT_SYMBOL	
-0x210e6bbf	ufshcd_query_descriptor_retry_xm	ufs-mediatek-mod	EXPORT_SYMBOL	
-0xff9b922f	ufshcd_read_desc_param_sel	ufs-mediatek-mod	EXPORT_SYMBOL	

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # gen-stock-symvers.py <gold-kernel dir> <built Module.symvers>... > stock.symvers
 #
-# Source-built modules that call into a stock module (GOLD_STOCK_MODULES, or a
-# GOLD_STOCK_REPLACEMENTS file) need the stock CRCs at modpost time. This lists
-# what the stock modules in the Makefile's lists export (CRCs read from their
-# __kcrctab*), leaving out symbols a source-built module already exports.
+# Source-built modules that call into a stock module (GOLD_STOCK_MODULES) need
+# the stock CRCs at modpost time. This lists what the stock modules in the
+# Makefile's list export (CRCs read from their __kcrctab*), leaving out symbols
+# a source-built module already exports.
 import os, re, struct, sys
 
 def exports(path):
@@ -24,10 +24,8 @@ def exports(path):
 
 here = os.path.dirname(os.path.abspath(__file__))
 mk = open(os.path.join(here, 'Makefile')).read()
-mods = []
-for var in ('GOLD_STOCK_MODULES', 'GOLD_STOCK_REPLACEMENTS'):
-    m = re.search(var + r' := \\\n((?:    \S+\.ko(?: \\)?\n)+)', mk)
-    mods += re.findall(r'(\S+\.ko)', m.group(1))
+m = re.search(r'GOLD_STOCK_MODULES := \\\n((?:    \S+\.ko(?: \\)?\n)+)', mk)
+mods = re.findall(r'(\S+\.ko)', m.group(1))
 built = set()
 for f in sys.argv[2:]:
     built |= {l.split('\t')[1] for l in open(f) if '\t' in l}

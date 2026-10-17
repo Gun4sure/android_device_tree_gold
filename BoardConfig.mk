@@ -197,7 +197,7 @@ TARGET_KERNEL_ADDITIONAL_FLAGS := \
 
 # In this order: each one links against those before it. kernel-prebuilt
 # comes last: it adds stock modules where gold's own drivers are not built
-# from source yet, and swaps them in for some that are (see its Makefile).
+# from source yet (see its Makefile).
 TARGET_KERNEL_EXT_MODULE_ROOT := $(GOLD_KERNEL_DIR)
 TARGET_KERNEL_EXT_MODULES := \
     gold-modules \

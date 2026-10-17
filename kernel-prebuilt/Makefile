@@ -3,15 +3,9 @@
 # kernel.mk builds this directory last, as an external module. Building does
 # nothing; installing puts stock files into the kernel's module tree:
 #
-# - GOLD_STOCK_MODULES have no source-built counterpart yet and are added,
-# - GOLD_STOCK_REPLACEMENTS are built from source too, but stock modules above
-#   depend on the stock build of them (their symbol CRCs differ), so the stock
-#   file replaces the source-built one in place. ufs-mediatek-mod is Xiaomi's
-#   (it reports to miev); the trees' one finds the LUNs but no disk comes up,
-#   so first stage mount fails.
-#
-# The files come from device/xiaomi/gold-kernel, where stock's vendor_boot and
-# vendor_dlkm modules are kept. Each module comes off these lists as its
+# GOLD_STOCK_MODULES have no source-built counterpart yet and are added. The
+# files come from device/xiaomi/gold-kernel, where stock's vendor_boot and
+# vendor_dlkm modules are kept. Each module comes off the list as its
 # source-built version can be used.
 #
 # The trees build many modules stock does not ship (other SoCs, test and dummy
@@ -47,9 +41,6 @@ SYSTEM_MAP := $(OUT_DIR)/System.map
 GOLD_STOCK_MODULES := \
     miev.ko
 
-GOLD_STOCK_REPLACEMENTS := \
-    ufs-mediatek-mod.ko
-
 KERNELRELEASE := $(shell cat $(OUT_DIR)/include/config/kernel.release)
 
 # Stock's sec.ko is built here as mtk_sec.ko
@@ -74,12 +65,6 @@ modules_install:
 		f=$$($(stock_file)); \
 		[ -n "$$f" ] || { echo "missing stock $$m" >&2; exit 1; }; \
 		cp "$$f" $(MODDIR)/extra/; \
-	done
-	@for m in $(GOLD_STOCK_REPLACEMENTS); do \
-		f=$$($(stock_file)); \
-		t=$$(find $(MODDIR) -name $$m | head -1); \
-		[ -n "$$f" ] && [ -n "$$t" ] || { echo "cannot replace $$m (stock '$$f', built '$$t')" >&2; exit 1; }; \
-		cp "$$f" "$$t"; \
 	done
 	@find $(MODDIR) -name '*.ko' | while read f; do \
 		case " $(GOLD_SHIPPED_MODULES) " in *" $${f##*/} "*) ;; *) rm "$$f";; esac; \
