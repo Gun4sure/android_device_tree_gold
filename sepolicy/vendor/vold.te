@@ -1,0 +1,2 @@
+# The remaining lifetime of the storage, which the device diagnostics in Settings show.
+r_dir_file(vold, gold_sysfs_ufs_health)

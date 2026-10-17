@@ -55,3 +55,6 @@ genfscon sysfs /devices/virtual/mi_display/disp_feature/disp-DSI-0 u:object_r:go
 
 # Board identification queried by the NVRAM service.
 genfscon sysfs /devices/virtual/huaqin/interface/hw_info u:object_r:gold_sysfs_hwinfo:s0
+
+# The UFS health descriptor, from which vold reads the storage's remaining lifetime.
+genfscon sysfs /devices/platform/11270000.ufshci/health_descriptor u:object_r:gold_sysfs_ufs_health:s0

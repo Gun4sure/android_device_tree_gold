@@ -11,3 +11,4 @@ type gold_sysfs_usbpd, fs_type, sysfs_type;
 type gold_sysfs_display, fs_type, sysfs_type;
 type gold_sysfs_fingerprint, fs_type, sysfs_type;
 type gold_sysfs_hwinfo, fs_type, sysfs_type;
+type gold_sysfs_ufs_health, fs_type, sysfs_type;
