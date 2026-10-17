@@ -1,5 +1,3 @@
-0xa8797e93	goodix_fp_exist	gf_spi_tee	EXPORT_SYMBOL	
-0x12034068	spi_fingerprint	gf_spi_tee	EXPORT_SYMBOL	
 0x4adf70c8	cdev_tevent_add_int	miev	EXPORT_SYMBOL	
 0x65d7dc25	cdev_tevent_add_str	miev	EXPORT_SYMBOL	
 0x04071551	cdev_tevent_alloc	miev	EXPORT_SYMBOL	

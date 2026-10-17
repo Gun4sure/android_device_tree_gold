@@ -45,17 +45,10 @@ SIGN_FILE := $(OUT_DIR)/scripts/sign-file
 SYSTEM_MAP := $(OUT_DIR)/System.map
 
 GOLD_STOCK_MODULES := \
-    miev.ko \
-    binder_prio.ko \
-    focaltech_tp.ko \
-    fpc1022_tee.ko \
-    gf_spi_tee.ko \
-    gt9916r.ko \
-    mitee.ko
+    miev.ko
 
 GOLD_STOCK_REPLACEMENTS := \
-    ufs-mediatek-mod.ko \
-    xiaomi_touch.ko
+    ufs-mediatek-mod.ko
 
 KERNELRELEASE := $(shell cat $(OUT_DIR)/include/config/kernel.release)
 
