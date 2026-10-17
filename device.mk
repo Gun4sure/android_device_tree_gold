@@ -309,6 +309,10 @@ PRODUCT_PACKAGES += \
     init.modem.rc \
     android.hardware.telephony.ims.prebuilt.xml
 
+# Turns on 5G NSA (EN-DC) where the modem keeps it off for a SIM.
+PRODUCT_PACKAGES += \
+    GoldNrDc
+
 # MediaTek framework classes used by the proprietary radio stack.
 $(call inherit-product, hardware/mediatek/frameworks/mediatek-frameworks.mk)
 
