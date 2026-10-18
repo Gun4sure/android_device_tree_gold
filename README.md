@@ -16,12 +16,11 @@ Forked from [Dhterech's tree](https://github.com/Dhterech/android_device_xiaomi_
 
 ## Scripts
 
-Both read the same stock package. Which one, and how to run them, is in the README of the repository each fills.
+Each fills a repository; how to run it is in that repository's README.
 
 | Script | What it fills |
 | --- | --- |
 | `extract-files.py` | `vendor/xiaomi/gold`, kept as [android_vendor_xiaomi_gold](https://github.com/Star-caorui/android_vendor_xiaomi_gold/tree/lineage-24.0#regenerating) |
-| `extract-kernel.sh` | `device/xiaomi/gold-kernel`, kept as [android_device_xiaomi_gold-kernels](https://github.com/Star-caorui/android_device_xiaomi_gold-kernels/tree/lineage-24.0#regenerating) |
 | `fetch-gki.sh` | `device/xiaomi/gold-kernel/gki/<build>`, from one of Google's GKI builds instead of the stock package (see [GKI builds](https://github.com/Star-caorui/android_device_xiaomi_gold-kernels/tree/lineage-24.0#gki-builds)) |
 
 ## Credits
