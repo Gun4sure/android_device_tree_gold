@@ -7,7 +7,7 @@ Device tree for LineageOS 24.0 (Android 17). It is checked out at `device/xiaomi
 | Releases, what works, tested models | [lineageos-gold](https://github.com/Star-caorui/lineageos-gold#readme) |
 | Known issues, what is untested or not done | [ISSUES.md](https://github.com/Star-caorui/lineageos-gold/blob/main/ISSUES.md) |
 | How to build | [local_manifests](https://github.com/Star-caorui/local_manifests/tree/lineage-24.0#readme) |
-| Stock kernel and modules | [android_device_xiaomi_gold-kernel](https://github.com/Star-caorui/android_device_xiaomi_gold-kernel/tree/lineage-24.0#readme) |
+| Stock kernel and modules | [android_device_xiaomi_gold-kernels](https://github.com/Star-caorui/android_device_xiaomi_gold-kernels/tree/lineage-24.0#readme) |
 | Proprietary files | [android_vendor_xiaomi_gold](https://github.com/Star-caorui/android_vendor_xiaomi_gold/tree/lineage-24.0#readme) |
 
 ## Origin
@@ -21,8 +21,8 @@ Both read the same stock package. Which one, and how to run them, is in the READ
 | Script | What it fills |
 | --- | --- |
 | `extract-files.py` | `vendor/xiaomi/gold`, kept as [android_vendor_xiaomi_gold](https://github.com/Star-caorui/android_vendor_xiaomi_gold/tree/lineage-24.0#regenerating) |
-| `extract-kernel.sh` | `device/xiaomi/gold-kernel`, kept as [android_device_xiaomi_gold-kernel](https://github.com/Star-caorui/android_device_xiaomi_gold-kernel/tree/lineage-24.0#regenerating) |
-| `fetch-gki.sh` | `device/xiaomi/gold-kernel/gki/<build>`, from one of Google's GKI builds instead of the stock package (see [GKI builds](https://github.com/Star-caorui/android_device_xiaomi_gold-kernel/tree/lineage-24.0#gki-builds)) |
+| `extract-kernel.sh` | `device/xiaomi/gold-kernel`, kept as [android_device_xiaomi_gold-kernels](https://github.com/Star-caorui/android_device_xiaomi_gold-kernels/tree/lineage-24.0#regenerating) |
+| `fetch-gki.sh` | `device/xiaomi/gold-kernel/gki/<build>`, from one of Google's GKI builds instead of the stock package (see [GKI builds](https://github.com/Star-caorui/android_device_xiaomi_gold-kernels/tree/lineage-24.0#gki-builds)) |
 
 ## Credits
 
