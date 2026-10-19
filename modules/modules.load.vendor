@@ -3,7 +3,6 @@ mtk_irtx_pwm.ko
 memory-amms.ko
 reboot-mode.ko
 syscon-reboot-mode.ko
-cmdq-bdg-mailbox.ko
 cmdq-bdg-test.ko
 cmdq-sec-drv.ko
 cmdq-test.ko

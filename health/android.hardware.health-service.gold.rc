@@ -18,10 +18,6 @@ service vendor.charger /vendor/bin/hw/android.hardware.health-service.gold --cha
     file /proc/last_kmsg r
 
 on charger
-    # The display driver is loaded by the module script, and the charger UI
-    # only initializes its display once, so wait until all modules are in.
-    wait_for_prop vendor.all.modules.ready 1
-    wait /dev/dri/card0 20
     chown system system /dev/graphics/fb0
     chown system system /dev/dri/card0
     # The backlight comes up before the display and is left dark: give it a

@@ -135,6 +135,7 @@ cmdq_helper_inf.ko
 mt6833_dcm.ko
 mtk_dcm.ko
 pwm-mtk-disp.ko
+cmdq-bdg-mailbox.ko
 leds-mtk.ko
 leds-mtk-disp.ko
 leds-mtk-pwm.ko
@@ -165,7 +166,6 @@ cmdq-platform-mt6833.ko
 clkbuf.ko
 reboot-mode.ko
 syscon-reboot-mode.ko
-cmdq-bdg-mailbox.ko
 spi_slave.ko
 sec.ko
 arm_dsu_pmu.ko

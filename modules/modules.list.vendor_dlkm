@@ -28,7 +28,6 @@ ccmni.ko
 ccu_isp6s.ko
 cfg80211.ko
 clk-disable-unused.ko
-cmdq-bdg-mailbox.ko
 cmdq-bdg-test.ko
 cmdq-sec-drv.ko
 cmdq-test.ko
