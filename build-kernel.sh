@@ -20,11 +20,12 @@ set -euo pipefail
 
 dev=device/xiaomi/gold
 kdir=device/xiaomi/gold-kernels
-[ -d "$dev" ] && [ -d "$kdir" ] && [ -d .repo/repo ] || {
+[ -d "$dev" ] && [ -d .repo/repo ] || {
     echo "Run this from the top of the Android tree." >&2
     exit 1
 }
 ktop=$PWD/out-kernel/gold
+mkdir -p "$kdir"
 
 # The sources, in a tree of their own. repo is the Android tree's, which allows a repo init
 # inside it, and the marker keeps the build system from scanning the tree.
