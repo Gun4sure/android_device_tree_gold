@@ -151,13 +151,6 @@ mtk-vcodec-enc-v1.ko
 mtk_jpeg.ko
 eas_ext.ko
 st21nfc.ko
-millet_binder.ko
-millet_core.ko
-millet_hs.ko
-millet_pkg.ko
-millet_sig.ko
-millet_oem_cgroup.ko
-binder_gki.ko
 binder_prio.ko
 simtray.ko
 cpumaxfreq.ko

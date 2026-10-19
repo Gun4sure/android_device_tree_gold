@@ -97,18 +97,6 @@ ifeq ($(filter stock latest,$(GOLD_GKI)),)
 endif
 GOLD_GKI_DIR := $(DEVICE_PATH)-kernels/gki/$(if $(filter latest,$(GOLD_GKI)),$(GOLD_GKI_LATEST),$(GOLD_GKI_STOCK))
 
-# Modules of MIUI's app freezer (Millet), which nothing outside MIUI talks to,
-# are not built; stock's load list still names them. Binder itself is provided
-# by GKI; binder_prio remains.
-GOLD_UNUSED_VENDOR_KERNEL_MODULES := \
-    binder_gki.ko \
-    millet_binder.ko \
-    millet_core.ko \
-    millet_hs.ko \
-    millet_oem_cgroup.ko \
-    millet_pkg.ko \
-    millet_sig.ko
-
 # The touchscreen drivers are only in vendor_dlkm on stock, which recovery
 # does not mount. A copy goes into the vendor ramdisk, with the two modules
 # they need there, and init.recovery.mt6833.rc loads them.
@@ -132,9 +120,7 @@ BOARD_SYSTEM_DLKM_SRC := $(GOLD_GKI_DIR)/system_dlkm
 TARGET_PREBUILT_KERNEL_HEADERS := $(DEVICE_PATH)/kernel-headers/kernel-uapi-headers.tar.gz
 
 BOARD_VENDOR_KERNEL_MODULES := $(wildcard $(DEVICE_PATH)-kernels/vendor_dlkm/*.ko)
-BOARD_VENDOR_KERNEL_MODULES_LOAD := $(filter-out \
-    $(GOLD_UNUSED_VENDOR_KERNEL_MODULES), \
-    $(strip $(shell cat $(DEVICE_PATH)/modules/modules.load.vendor)))
+BOARD_VENDOR_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/modules/modules.load.vendor))
 
 BOARD_VENDOR_RAMDISK_KERNEL_MODULES := $(wildcard $(DEVICE_PATH)-kernels/vendor_ramdisk/*.ko)
 BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/modules/modules.load.vendor_ramdisk))
