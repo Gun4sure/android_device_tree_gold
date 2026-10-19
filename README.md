@@ -18,7 +18,7 @@ Forked from [Dhterech's tree](https://github.com/Dhterech/android_device_xiaomi_
 
 | Script | What it fills |
 | --- | --- |
-| `build-kernel.sh` | `device/xiaomi/gold-kernels`, before each build: builds the vendor modules from source and fetches Google's GKI builds. Run it from the top of the tree; `SKIP_KERNEL_SYNC=1` builds without syncing the sources first |
+| `build-kernel.sh` | `device/xiaomi/gold-kernels`, before each build: builds the vendor modules and the device tree blob from source and fetches Google's GKI builds. Run it from the top of the tree; `SKIP_KERNEL_SYNC=1` builds without syncing the sources first |
 | `extract-files.py` | `vendor/xiaomi/gold`, kept as [android_vendor_xiaomi_gold](https://github.com/Star-caorui/android_vendor_xiaomi_gold/tree/lineage-24.0#regenerating), from the stock package |
 | `fetch-gki.sh` | `device/xiaomi/gold-kernels/gki/<build>`, from one of Google's GKI builds; `build-kernel.sh` runs it for each build in `gki.sha256` (see [GKI builds](https://github.com/Star-caorui/android_device_xiaomi_gold-kernels/tree/lineage-24.0#gki-builds)) |
 

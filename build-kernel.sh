@@ -3,7 +3,8 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # Put gold's kernel into device/xiaomi/gold-kernels, where the build takes it from: the vendor
-# modules, built from source with android_kernel_xiaomi_gold_manifest, and Google's GKI builds.
+# modules and the device tree blob, built from source with android_kernel_xiaomi_gold_manifest,
+# and Google's GKI builds.
 # LineageOS's build_kernel does the same for the devices whose kernel manifests it hosts.
 # Usage, from the top of the Android tree, before building:
 #   device/xiaomi/gold/build-kernel.sh
@@ -65,6 +66,10 @@ for part, mods in (('vendor_ramdisk', names('modules.load.vendor_ramdisk', 'modu
         shutil.copy2(os.path.join(built, m), out)
     print('%s: %d modules' % (part, len(mods)))
 EOF
+
+# The device tree blob of vendor_boot
+mkdir -p "$kdir/dtb"
+cp "$ktop/out/dtb/gold.dtb" "$kdir/dtb/gold.dtb"
 
 # Google's GKI builds, and a check that the vendor modules load on each
 for id in $(awk '/^[0-9]/ { print $1 }' "$dev/gki.sha256" | sort -u); do
