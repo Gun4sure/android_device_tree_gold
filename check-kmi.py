@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
-# check-kmi.py <GKI Module.symvers> <module dir> <GKI module>...
+# check-kmi.py <GKI build dir> <module dir>...
 #
-# The modules shipped with Google's GKI kernel may use only what the GKI build
-# exports, with its CRCs. For every module under <module dir> other than the
-# GKI ones, each symbol it needs must be exported by the GKI build with the
-# same CRC, or by another module there. Weak references may stay unresolved.
+# The vendor modules may use only what Google's GKI build exports, with its
+# CRCs. For every module under the module dirs, each symbol it needs must be
+# exported by the GKI build (gki/<build>/ of gold-kernels) with the same CRC,
+# or by another module there or among the build's GKI modules. Weak references
+# may stay unresolved.
 import os, struct, sys
 
+gki_dir = sys.argv[1]
 gki = {}
-for line in open(sys.argv[1]):
+for line in open(os.path.join(gki_dir, 'kernel_aarch64_Module.symvers')):
     f = line.rstrip('\n').split('\t')
     if len(f) >= 3:
         gki[f[1]] = int(f[0], 16)
-gki_modules = set(sys.argv[3:])
+gki_module_dir = os.path.join(gki_dir, 'system_dlkm', 'lib', 'modules')
+gki_modules = {m for m in os.listdir(gki_module_dir) if m.endswith('.ko')}
 
 def sections(d):
     shoff, = struct.unpack_from('<Q', d, 0x28)
@@ -22,7 +25,7 @@ def sections(d):
     return {d[names + s[0]:d.index(b'\0', names + s[0])].decode(): s for s in secs}, secs
 
 exported, needed = set(), {}
-for root, _, files in os.walk(sys.argv[2]):
+for root, _, files in (w for top in [gki_module_dir] + sys.argv[2:] for w in os.walk(top)):
     for name in files:
         if not name.endswith('.ko'):
             continue

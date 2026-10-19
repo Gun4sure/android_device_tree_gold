@@ -7,7 +7,7 @@ Device tree for LineageOS 24.0 (Android 17). It is checked out at `device/xiaomi
 | Releases, what works, tested models | [lineageos-gold](https://github.com/Star-caorui/lineageos-gold#readme) |
 | Known issues, what is untested or not done | [ISSUES.md](https://github.com/Star-caorui/lineageos-gold/blob/main/ISSUES.md) |
 | How to build | [local_manifests](https://github.com/Star-caorui/local_manifests/tree/lineage-24.0#readme) |
-| Stock kernel and modules | [android_device_xiaomi_gold-kernels](https://github.com/Star-caorui/android_device_xiaomi_gold-kernels/tree/lineage-24.0#readme) |
+| Kernel and modules | [android_device_xiaomi_gold-kernels](https://github.com/Star-caorui/android_device_xiaomi_gold-kernels/tree/lineage-24.0#readme), with the module sources in [android_kernel_xiaomi_gold_manifest](https://github.com/Star-caorui/android_kernel_xiaomi_gold_manifest#readme) |
 | Proprietary files | [android_vendor_xiaomi_gold](https://github.com/Star-caorui/android_vendor_xiaomi_gold/tree/lineage-24.0#readme) |
 
 ## Origin
@@ -16,12 +16,11 @@ Forked from [Dhterech's tree](https://github.com/Dhterech/android_device_xiaomi_
 
 ## Scripts
 
-Each fills a repository; how to run it is in that repository's README.
-
 | Script | What it fills |
 | --- | --- |
-| `extract-files.py` | `vendor/xiaomi/gold`, kept as [android_vendor_xiaomi_gold](https://github.com/Star-caorui/android_vendor_xiaomi_gold/tree/lineage-24.0#regenerating) |
-| `fetch-gki.sh` | `device/xiaomi/gold-kernel/gki/<build>`, from one of Google's GKI builds instead of the stock package (see [GKI builds](https://github.com/Star-caorui/android_device_xiaomi_gold-kernels/tree/lineage-24.0#gki-builds)) |
+| `build-kernel.sh` | `device/xiaomi/gold-kernels`, before each build: builds the vendor modules from source and fetches Google's GKI builds. Run it from the top of the tree; `SKIP_KERNEL_SYNC=1` builds without syncing the sources first |
+| `extract-files.py` | `vendor/xiaomi/gold`, kept as [android_vendor_xiaomi_gold](https://github.com/Star-caorui/android_vendor_xiaomi_gold/tree/lineage-24.0#regenerating), from the stock package |
+| `fetch-gki.sh` | `device/xiaomi/gold-kernels/gki/<build>`, from one of Google's GKI builds; `build-kernel.sh` runs it for each build in `gki.sha256` (see [GKI builds](https://github.com/Star-caorui/android_device_xiaomi_gold-kernels/tree/lineage-24.0#gki-builds)) |
 
 ## Credits
 

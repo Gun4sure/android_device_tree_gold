@@ -1,5 +1,0 @@
-0x4adf70c8	cdev_tevent_add_int	miev	EXPORT_SYMBOL	
-0x65d7dc25	cdev_tevent_add_str	miev	EXPORT_SYMBOL	
-0x04071551	cdev_tevent_alloc	miev	EXPORT_SYMBOL	
-0x2efdafc8	cdev_tevent_destroy	miev	EXPORT_SYMBOL	
-0x74b3b77c	cdev_tevent_write	miev	EXPORT_SYMBOL	
