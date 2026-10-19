@@ -17,13 +17,10 @@ set -euo pipefail
 id=$1
 kdir=${2:-device/xiaomi/gold-kernels}
 sums=$(dirname -- "$0")/gki.sha256
+list=$(dirname -- "$0")/modules/modules.load.system_dlkm
 url=https://ci.android.com/builds/submitted/$id/kernel_aarch64/latest/raw
 out=$kdir/gki/$id
 
-[ -f "$kdir/modules.load.system_dlkm" ] || {
-    echo "$kdir has no modules.load.system_dlkm. Run this from the top of the Android tree." >&2
-    exit 1
-}
 
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
@@ -47,7 +44,7 @@ cp "$work/Image.gz" "$out/kernel"
 cp "$work/kernel_aarch64_Module.symvers" "$out/"
 
 python3 - "$id" "$work/Image.gz" "$work/sd/flatten/lib/modules" \
-    "$kdir/modules.load.system_dlkm" "$out/system_dlkm/lib/modules" <<'EOF'
+    "$list" "$out/system_dlkm/lib/modules" <<'EOF'
 import gzip, os, re, shutil, sys
 
 build, image, src, stock_load, out = sys.argv[1:]

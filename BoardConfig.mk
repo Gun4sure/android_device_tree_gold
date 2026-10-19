@@ -134,12 +134,12 @@ TARGET_PREBUILT_KERNEL_HEADERS := $(DEVICE_PATH)/kernel-headers/kernel-uapi-head
 BOARD_VENDOR_KERNEL_MODULES := $(wildcard $(DEVICE_PATH)-kernels/vendor_dlkm/*.ko)
 BOARD_VENDOR_KERNEL_MODULES_LOAD := $(filter-out \
     $(GOLD_UNUSED_VENDOR_KERNEL_MODULES), \
-    $(strip $(shell cat $(DEVICE_PATH)-kernels/modules.load.vendor)))
+    $(strip $(shell cat $(DEVICE_PATH)/modules/modules.load.vendor)))
 
 BOARD_VENDOR_RAMDISK_KERNEL_MODULES := $(wildcard $(DEVICE_PATH)-kernels/vendor_ramdisk/*.ko)
-BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)-kernels/modules.load.vendor_ramdisk))
+BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/modules/modules.load.vendor_ramdisk))
 
-BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)-kernels/modules.load.recovery))
+BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/modules/modules.load.recovery))
 
 BOARD_VENDOR_RAMDISK_KERNEL_MODULES += \
     $(addprefix $(DEVICE_PATH)-kernels/vendor_dlkm/,$(GOLD_RECOVERY_TOUCH_MODULES))

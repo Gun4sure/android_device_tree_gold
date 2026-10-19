@@ -49,11 +49,11 @@ fi
 
 # The vendor modules the lists name. The vendor ramdisk has those it loads, in normal boot or
 # in recovery; vendor_dlkm has some that are loaded later, by name.
-python3 - "$ktop/out/modules" "$kdir" <<'EOF'
+python3 - "$ktop/out/modules" "$dev/modules" "$kdir" <<'EOF'
 import os, shutil, sys
 
-built, kdir = sys.argv[1:]
-names = lambda *lists: sorted({l.strip() for f in lists for l in open(os.path.join(kdir, f)) if l.strip()})
+built, lists, kdir = sys.argv[1:]
+names = lambda *files: sorted({l.strip() for f in files for l in open(os.path.join(lists, f)) if l.strip()})
 for part, mods in (('vendor_ramdisk', names('modules.load.vendor_ramdisk', 'modules.load.recovery')),
                    ('vendor_dlkm', names('modules.list.vendor_dlkm'))):
     missing = [m for m in mods if not os.path.exists(os.path.join(built, m))]
