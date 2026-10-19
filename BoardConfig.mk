@@ -83,8 +83,8 @@ BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)-kernels/dtbo.img
 BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)-kernels/dtb
 
 # build-kernel.sh puts the kernel into gold-kernels before the build: the
-# vendor modules and the device tree blob, built from source, and Google's GKI
-# builds; the DTBO is stock's. GOLD_GKI, picked in the environment, is the
+# vendor modules, the device tree blob and its overlay, built from source, and
+# Google's GKI builds. GOLD_GKI, picked in the environment, is the
 # build of the kernel image and the GKI modules in system_dlkm: stock is the
 # one stock ships; latest is Google's newest of the same KMI generation.
 # gki.sha256 lists both.
