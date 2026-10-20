@@ -206,27 +206,40 @@ AB_OTA_PARTITIONS += \
     vbmeta_system \
     vbmeta_vendor
 
+# Chained as stock's: vbmeta holds dtbo, vendor_boot and the dlkm partitions and chains boot,
+# vbmeta_system and vbmeta_vendor, at stock's rollback index locations and with its rollback
+# indexes, 0.
+# The key is AOSP's 4096-bit test key, which this device's builds have always been signed with:
+# KeyMint binds every key to the top vbmeta's public key, so another one would leave an updated
+# phone unable to read its data.
 BOARD_AVB_ENABLE := true
-BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --set_hashtree_disabled_flag
-BOARD_AVB_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
 BOARD_AVB_ALGORITHM := SHA256_RSA4096
+BOARD_AVB_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
 
-BOARD_AVB_BOOT_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
+# Verity is off: with it on, an update would also compute the hash trees of the partitions it
+# writes on the phone, which makes incremental updates much slower.
+BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --set_hashtree_disabled_flag
+
+# Stock's hash trees are SHA-256; AOSP's default is SHA-1.
+$(foreach p,ODM_DLKM PRODUCT SYSTEM SYSTEM_DLKM SYSTEM_EXT VENDOR VENDOR_DLKM, \
+    $(eval BOARD_AVB_$(p)_ADD_HASHTREE_FOOTER_ARGS += --hash_algorithm sha256))
+
 BOARD_AVB_BOOT_ALGORITHM := SHA256_RSA4096
-BOARD_AVB_BOOT_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
-BOARD_AVB_BOOT_ROLLBACK_INDEX_LOCATION := 1
+BOARD_AVB_BOOT_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
+BOARD_AVB_BOOT_ROLLBACK_INDEX := 0
+BOARD_AVB_BOOT_ROLLBACK_INDEX_LOCATION := 3
 
-BOARD_AVB_VBMETA_SYSTEM := system system_ext system_dlkm product
-BOARD_AVB_VBMETA_SYSTEM_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
+BOARD_AVB_VBMETA_SYSTEM := product system system_ext
 BOARD_AVB_VBMETA_SYSTEM_ALGORITHM := SHA256_RSA4096
-BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
+BOARD_AVB_VBMETA_SYSTEM_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
+BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX := 0
 BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX_LOCATION := 2
 
-BOARD_AVB_VBMETA_VENDOR := vendor vendor_dlkm odm_dlkm
-BOARD_AVB_VBMETA_VENDOR_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
+BOARD_AVB_VBMETA_VENDOR := vendor
 BOARD_AVB_VBMETA_VENDOR_ALGORITHM := SHA256_RSA4096
-BOARD_AVB_VBMETA_VENDOR_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
-BOARD_AVB_VBMETA_VENDOR_ROLLBACK_INDEX_LOCATION := 3
+BOARD_AVB_VBMETA_VENDOR_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
+BOARD_AVB_VBMETA_VENDOR_ROLLBACK_INDEX := 0
+BOARD_AVB_VBMETA_VENDOR_ROLLBACK_INDEX_LOCATION := 4
 
 # Inherit the proprietary files
 include vendor/xiaomi/gold/BoardConfigVendor.mk
