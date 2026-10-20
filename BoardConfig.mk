@@ -121,16 +121,18 @@ BOARD_SUPER_PARTITION_SIZE := 9126805504
 
 BOARD_USES_METADATA_PARTITION := true
 
-BOARD_SUPER_PARTITION_GROUPS := mediatek_dynamic_partitions
-BOARD_MEDIATEK_DYNAMIC_PARTITIONS_SIZE := 9122611200
-BOARD_MEDIATEK_DYNAMIC_PARTITIONS_PARTITION_LIST := \
-    system \
-    system_ext \
-    system_dlkm \
+# The group is stock's one group in its update payload. mi_ext, stock's last dynamic partition,
+# holds only MIUI's additions and is not built.
+BOARD_SUPER_PARTITION_GROUPS := main
+BOARD_MAIN_SIZE := 9116319744
+BOARD_MAIN_PARTITION_LIST := \
+    odm_dlkm \
     product \
+    system \
+    system_dlkm \
+    system_ext \
     vendor \
-    vendor_dlkm \
-    odm_dlkm
+    vendor_dlkm
 
 BOARD_ODM_DLKMIMAGE_FILE_SYSTEM_TYPE := erofs
 BOARD_SYSTEM_DLKMIMAGE_FILE_SYSTEM_TYPE := erofs
