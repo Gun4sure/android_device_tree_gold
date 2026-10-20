@@ -1,4 +1,4 @@
-<manifest version="8.0" type="device" target-level="7">
+<manifest version="8.0" type="device" target-level="202404">
     <!-- Core HALs; source compatibility services remain where stock blobs are not used. -->
     <hal format="aidl">
         <name>android.hardware.soundtrigger3</name>
