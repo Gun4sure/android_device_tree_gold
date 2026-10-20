@@ -204,8 +204,8 @@ PRODUCT_COPY_FILES += \
 
 # Health
 PRODUCT_PACKAGES += \
-    android.hardware.health-service.gold \
-    android.hardware.health-service.gold-recovery \
+    android.hardware.health-service.mediatek \
+    android.hardware.health-service.mediatek-recovery \
     vendor.lineage.health-service.default
 
 # Charging control: writing 1 to input_suspend stops charging, 0 resumes it
