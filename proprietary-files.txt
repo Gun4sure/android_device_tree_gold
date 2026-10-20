@@ -1782,6 +1782,10 @@ vendor/lib/libOpenCL.so
 vendor/lib64/vendor.mediatek.hardware.composer_ext-V1-ndk.so
 vendor/lib64/vendor.mediatek.hardware.composer_ext@1.0.so
 
+# Kernel modules
+vendor/bin/init.insmod.sh
+vendor/etc/init.insmod.mt6833.cfg
+
 # Keymint
 vendor/lib64/android.hardware.security.keymint-V3-ndk.so:vendor/lib64/android.hardware.security.keymint-V3-ndk-prebuilt.so;FIX_SONAME
 vendor/bin/hw/android.hardware.security.keymint@3.0-service.mitee
