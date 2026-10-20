@@ -7,7 +7,7 @@ Device tree for LineageOS 24.0 (Android 17). It is checked out at `device/xiaomi
 | Releases, what works, tested models | [lineageos-gold](https://github.com/Star-caorui/lineageos-gold#readme) |
 | Known issues, what is untested or not done | [ISSUES.md](https://github.com/Star-caorui/lineageos-gold/blob/main/ISSUES.md) |
 | How to build | [local_manifests](https://github.com/Star-caorui/local_manifests/tree/lineage-24.0#readme) |
-| Kernel and modules | Built from source by `build-kernel.sh` (the sources and how they compare with stock's: [android_kernel_xiaomi_gold_manifest](https://github.com/Star-caorui/android_kernel_xiaomi_gold_manifest#readme)), with Google's GKI (see [GKI builds](#gki-builds)) |
+| Kernel and modules | Built by LineageOS's `build_kernel` from [android_kernel_xiaomi_gold_manifest](https://github.com/Star-caorui/android_kernel_xiaomi_gold_manifest#readme) (the sources, Google's GKI builds, and how the modules compare with stock's) |
 | Proprietary files | [android_vendor_xiaomi_gold](https://github.com/Star-caorui/android_vendor_xiaomi_gold/tree/lineage-24.0#readme) |
 
 ## Origin
@@ -18,24 +18,11 @@ Forked from [Dhterech's tree](https://github.com/Dhterech/android_device_xiaomi_
 
 | Script | What it fills |
 | --- | --- |
-| `build-kernel.sh` | `device/xiaomi/gold-kernels`, before each build: builds the vendor modules, the device tree blob and its overlay from source and fetches Google's GKI builds. Run it from the top of the tree; `SKIP_KERNEL_SYNC=1` builds without syncing the sources first |
 | `extract-files.py` | `vendor/xiaomi/gold`, kept as [android_vendor_xiaomi_gold](https://github.com/Star-caorui/android_vendor_xiaomi_gold/tree/lineage-24.0#regenerating), from the stock package |
-| `fetch-gki.sh` | `device/xiaomi/gold-kernels/gki/<build>`, from one of Google's GKI builds; `build-kernel.sh` runs it for each build in `gki.sha256` (see [GKI builds](#gki-builds)) |
 
 ## Kernel modules
 
-`modules/` lists which vendor modules go into the vendor ramdisk and `vendor_dlkm`, which of them load and in what order, and which of Google's GKI modules `system_dlkm` has. They started as stock's (OS3.0.5.0.VNQMIXM); `modules.load.vendor` also loads `wmt_drv.ko`, which the Wi-Fi, Bluetooth, GPS and FM drivers depend on, and no longer names Millet's modules.
-
-## GKI builds
-
-The kernel image and the `system_dlkm` modules are Google's GKI, not Xiaomi's: any later GKI build of the same KMI generation (`android15-8`) runs the same vendor modules. `build-kernel.sh` downloads each build `gki.sha256` lists, with `fetch-gki.sh`, which checks the downloads against their SHA-256 and keeps the GKI modules `modules/modules.load.system_dlkm` names. `GOLD_GKI` picks one:
-
-| `GOLD_GKI` | Build |
-| --- | --- |
-| `stock` | 15511674, `6.6.118-android15-8-ge56cf6b09cca-ab15511674-4k` (`android15-6.6-2026-01_r34`), as stock ships it |
-| `latest` | 16498190, `6.6.143-android15-8-g170954b20ad9-ab16498190-4k` (`android15-6.6-2026-10_r1`, [release builds](https://source.android.com/docs/core/architecture/kernel/gki-android15-6_6-release-builds)) |
-
-Build 16498190 no longer has `tls.ko` (`CONFIG_TLS` is gone from `gki_defconfig`); nothing depends on it. For a newer build, `fetch-gki.sh <build id>` prints the lines to add to `gki.sha256`; then set `GOLD_GKI_LATEST` in `BoardConfig.mk`.
+`modules/` lists which vendor modules go into the vendor ramdisk and `vendor_dlkm`, and which of them load and in what order. They started as stock's (OS3.0.5.0.VNQMIXM); `modules.load.vendor` also loads `wmt_drv.ko`, which the Wi-Fi, Bluetooth, GPS and FM drivers depend on, and no longer names Millet's modules.
 
 ## Credits
 

@@ -74,28 +74,28 @@ TARGET_NO_BOOTLOADER := true
 TARGET_SCREEN_DENSITY := 440
 TARGET_USES_VULKAN := true
 
-# Kernel
-TARGET_KERNEL_NO_GCC := true
+# Kernel: LineageOS's build_kernel builds it with android_kernel_xiaomi_gold_manifest, as lamu's,
+# into gold-kernels: the vendor modules, the device tree blob and its overlay from source, and
+# Google's GKI build, the kernel image and the GKI modules of system_dlkm.
+TARGET_KERNEL_DEVICE := mgk_64_k66
+TARGET_KERNEL_DIR := $(DEVICE_PATH)-kernels
+TARGET_KERNEL_PLATFORM_SOURCE := xiaomi_gold
 TARGET_KERNEL_VERSION := 6.6
-BOARD_INCLUDE_DTB_IN_BOOTIMG := true
+
 BOARD_KERNEL_IMAGE_NAME := Image.gz
-BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)-kernels/dtbo.img
-BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)-kernels/dtb
+TARGET_PREBUILT_KERNEL := $(TARGET_KERNEL_DIR)/$(BOARD_KERNEL_IMAGE_NAME)
+TARGET_PREBUILT_KERNEL_HEADERS := $(DEVICE_PATH)/kernel-headers/kernel-uapi-headers.tar.gz
+BOARD_INCLUDE_DTB_IN_BOOTIMG := true
+BOARD_PREBUILT_DTBIMAGE_DIR := $(TARGET_KERNEL_DIR)
+BOARD_PREBUILT_DTBOIMAGE := $(TARGET_KERNEL_DIR)/dtbo.img
 
-# build-kernel.sh puts the kernel into gold-kernels before the build: the
-# vendor modules, the device tree blob and its overlay, built from source, and
-# Google's GKI builds. GOLD_GKI, picked in the environment, is the
-# build of the kernel image and the GKI modules in system_dlkm: stock is the
-# one stock ships; latest is Google's newest of the same KMI generation.
-# gki.sha256 lists both.
-GOLD_GKI ?= stock
-GOLD_GKI_STOCK := 15511674
-GOLD_GKI_LATEST := 16498190
+BOARD_SYSTEM_KERNEL_MODULES_LOAD := $(strip $(shell cat $(TARGET_KERNEL_DIR)/system_dlkm.modules.load 2>/dev/null))
+BOARD_SYSTEM_KERNEL_MODULES := $(addprefix $(TARGET_KERNEL_DIR)/,$(BOARD_SYSTEM_KERNEL_MODULES_LOAD))
 
-ifeq ($(filter stock latest,$(GOLD_GKI)),)
-    $(error GOLD_GKI is stock or latest, not '$(GOLD_GKI)')
-endif
-GOLD_GKI_DIR := $(DEVICE_PATH)-kernels/gki/$(if $(filter latest,$(GOLD_GKI)),$(GOLD_GKI_LATEST),$(GOLD_GKI_STOCK))
+GOLD_MODULES := $(DEVICE_PATH)/modules
+BOARD_VENDOR_KERNEL_MODULES_LOAD := $(strip $(shell cat $(GOLD_MODULES)/modules.load.vendor))
+BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(GOLD_MODULES)/modules.load.vendor_ramdisk))
+BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(strip $(shell cat $(GOLD_MODULES)/modules.load.recovery))
 
 # The touchscreen drivers are only in vendor_dlkm on stock, which recovery
 # does not mount. A copy goes into the vendor ramdisk, with the two modules
@@ -107,28 +107,11 @@ GOLD_RECOVERY_TOUCH_MODULES := \
     focaltech_tp.ko \
     gt9916r.ko
 
-# A source directory that does not exist, so that kernel.mk takes the prebuilt
-# kernel quietly. The config is not used on this path.
-TARGET_KERNEL_SOURCE := kernel/xiaomi/gold-6.6
-TARGET_KERNEL_CONFIG := \
-    gki_defconfig \
-    gold.config
-
-TARGET_FORCE_PREBUILT_KERNEL := true
-TARGET_PREBUILT_KERNEL := $(GOLD_GKI_DIR)/kernel
-BOARD_SYSTEM_DLKM_SRC := $(GOLD_GKI_DIR)/system_dlkm
-TARGET_PREBUILT_KERNEL_HEADERS := $(DEVICE_PATH)/kernel-headers/kernel-uapi-headers.tar.gz
-
-BOARD_VENDOR_KERNEL_MODULES := $(wildcard $(DEVICE_PATH)-kernels/vendor_dlkm/*.ko)
-BOARD_VENDOR_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/modules/modules.load.vendor))
-
-BOARD_VENDOR_RAMDISK_KERNEL_MODULES := $(wildcard $(DEVICE_PATH)-kernels/vendor_ramdisk/*.ko)
-BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/modules/modules.load.vendor_ramdisk))
-
-BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/modules/modules.load.recovery))
-
-BOARD_VENDOR_RAMDISK_KERNEL_MODULES += \
-    $(addprefix $(DEVICE_PATH)-kernels/vendor_dlkm/,$(GOLD_RECOVERY_TOUCH_MODULES))
+BOARD_VENDOR_KERNEL_MODULES := $(addprefix $(TARGET_KERNEL_DIR)/,$(strip $(shell cat $(GOLD_MODULES)/modules.list.vendor_dlkm)))
+BOARD_VENDOR_RAMDISK_KERNEL_MODULES := $(addprefix $(TARGET_KERNEL_DIR)/,$(sort \
+    $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD) \
+    $(BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD) \
+    $(GOLD_RECOVERY_TOUCH_MODULES)))
 
 BOOT_KERNEL_MODULES := $(BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD) $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD)
 
