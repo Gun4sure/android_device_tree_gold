@@ -1,0 +1,2 @@
+# MediaProfiles reads ro.media.xml_variant.profiles to pick the camcorder profiles.
+get_prop(mediaserver, media_variant_prop)
