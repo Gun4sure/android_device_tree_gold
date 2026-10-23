@@ -26,3 +26,6 @@ ro.product.odm.model=2312DRAABI
 ro.product.odm.cert=2312DRAABI
 ro.product.odm.name=gold_in_global
 ro.product.odm.marketname=Redmi Note 13 5G
+
+# Camcorder profiles for the cameras with an ultrawide: 2 is the ultrawide, 3 the 2 MP macro
+ro.media.xml_variant.profiles=_V1_0_uwm
