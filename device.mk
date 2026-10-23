@@ -393,6 +393,8 @@ PRODUCT_COPY_FILES += \
         vendor/xiaomi/gold/proprietary/vendor/firmware/$(f):$(TARGET_COPY_OUT_RECOVERY)/root/vendor/firmware/$(f))
 
 # Vibrator
+$(call soong_config_set_bool,mediatek_vibrator,supports_effects,true)
+
 PRODUCT_PACKAGES += \
     android.hardware.vibrator-service.mediatek
 
