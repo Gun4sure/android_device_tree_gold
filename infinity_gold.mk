@@ -16,12 +16,20 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 $(call inherit-product, device/xiaomi/gold/device.mk)
 
 # Inherit some common LineageOS stuff.
-$(call inherit-product, vendor/lineage/config/common_full_phone.mk)
+$(call inherit-product, vendor/infinity/config/common_full_phone.mk)
 
-PRODUCT_NAME := lineage_gold
+PRODUCT_NAME := infinity_gold
 PRODUCT_DEVICE := gold
 PRODUCT_MANUFACTURER := Xiaomi
 PRODUCT_BRAND := Redmi
 PRODUCT_MODEL := 2312DRAABG
 
+# Maintainer Name
+INFINITY_MAINTAINER := "Gun4sure"
+
+# Whether the device supports Fingerprint On Display
+TARGET_HAS_UDFPS := false
+
+# Whether Including Google Apps
+WITH_GAPPS := true
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
